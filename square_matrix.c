@@ -59,10 +59,10 @@ void print_base_matrix(struct SquareMatrix* m) {
   }
 }
 
-// X is in row major
-// R should be hybrid major
+// X is in row order
+// R should be hybrid order
 // Recursivley break apart R into base size matrices
-void to_hybrid_major_rec(int i,
+void to_hybrid_order_rec(int i,
                          int j,
                          struct SquareMatrix* x,
                          struct SquareMatrix* r) {
@@ -81,19 +81,20 @@ void to_hybrid_major_rec(int i,
     struct SquareMatrix r_22 = quadrant_22(r);
     int quad_width = r_11.width;
 
-    to_hybrid_major_rec(i, j, x, &r_11);
-    to_hybrid_major_rec(i, j + quad_width, x, &r_12);
-    to_hybrid_major_rec(i + quad_width, j, x, &r_21);
-    to_hybrid_major_rec(i + quad_width, j + quad_width, x, &r_22);
+    cilk_spawn to_hybrid_order_rec(i, j, x, &r_11);
+    cilk_spawn to_hybrid_order_rec(i, j + quad_width, x, &r_12);
+    cilk_spawn to_hybrid_order_rec(i + quad_width, j, x, &r_21);
+    cilk_spawn to_hybrid_order_rec(i + quad_width, j + quad_width, x, &r_22);
   }
 }
 
-void to_hybrid_major(struct SquareMatrix* x, struct SquareMatrix* r) {
+void to_hybrid_order(struct SquareMatrix* x, struct SquareMatrix* r) {
   assert(x->width == r->width);
-  to_hybrid_major_rec(0, 0, x, r);
+  to_hybrid_order_rec(0, 0, x, r);
+  cilk_sync;
 }
 
-void to_row_major_rec(int i,
+void to_row_order_rec(int i,
                       int j,
                       struct SquareMatrix* x,
                       struct SquareMatrix* r) {
@@ -112,19 +113,20 @@ void to_row_major_rec(int i,
     struct SquareMatrix x_22 = quadrant_22(x);
     int quad_width = x_11.width;
 
-    to_row_major_rec(i, j, &x_11, r);
-    to_row_major_rec(i, j + quad_width, &x_12, r);
-    to_row_major_rec(i + quad_width, j, &x_21, r);
-    to_row_major_rec(i + quad_width, j + quad_width, &x_22, r);
+    cilk_spawn to_row_order_rec(i, j, &x_11, r);
+    cilk_spawn to_row_order_rec(i, j + quad_width, &x_12, r);
+    cilk_spawn to_row_order_rec(i + quad_width, j, &x_21, r);
+    cilk_spawn to_row_order_rec(i + quad_width, j + quad_width, &x_22, r);
   }
 }
 
-void to_row_major(struct SquareMatrix* x, struct SquareMatrix* r) {
+void to_row_order(struct SquareMatrix* x, struct SquareMatrix* r) {
   assert(x->width == r->width);
-  to_row_major_rec(0, 0, x, r);
+  to_row_order_rec(0, 0, x, r);
+  cilk_sync;
 }
 
-void print_row_major_matrix(struct SquareMatrix* m) {
+void print_row_order_matrix(struct SquareMatrix* m) {
   for (int i = 0; i < m->width; i++) {
     for (int j = 0; j < m->width; j++) {
       int index = i * m->width + j;

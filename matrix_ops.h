@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "square_matrix.h"
 
 // Add y to x
 void mm_add(struct SquareMatrix* x, struct SquareMatrix* y);

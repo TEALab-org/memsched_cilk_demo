@@ -14,6 +14,10 @@ void* t_malloc(int bytes) {
   return malloc(bytes);
 }
 
+void zero_total_mem() {
+  atomic_store(&total_mem, 0.0);
+}
+
 void print_total_mem() {
   int total_used = atomic_load(&total_mem);
   printf("Total bytes allocated: %d\n", total_used);
@@ -22,6 +26,10 @@ void print_total_mem() {
 int get_total_mem() {
   int total_used = atomic_load(&total_mem);
   return total_used;
+}
+
+void set_mem_usage_limit(int limit) {
+  MEM_USAGE_LIMIT = limit;
 }
 
 #endif
