@@ -58,7 +58,7 @@ void mm_in(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix* 
   // Parallel
   mm_in(&x_11, &y_11, &z_11);
   mm_in(&x_11, &y_12, &z_12);
-  mm_in(&x_21, &x_11, &z_21);
+  mm_in(&x_21, &y_11, &z_21);
   mm_in(&x_21, &y_12, &z_22);
   // Sync
 
