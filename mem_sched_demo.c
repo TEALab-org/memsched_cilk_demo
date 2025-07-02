@@ -1,12 +1,14 @@
-#include "square_matrix.h"
-#include "matrix_ops.h"
-#include "square_matrix.c"
-#include "matrix_ops.c"
-#include "allocator.h"
 #include <math.h>
 
+#include "allocator.h"
+#include "matrix_ops.c"
+#include "matrix_ops.h"
+#include "square_matrix.c"
+#include "square_matrix.h"
+
 void print_help() {
-  printf("mem_sched_demo P M T\n"
+  printf(
+      "mem_sched_demo P M T\n"
       "P Matrix width is BASE_WIDTH * 2^P\n"
       "M Memory usage limit in bytes\n"
       "T is mm type, 0 => In place\n"
@@ -16,13 +18,16 @@ void print_help() {
 
 char* mm_type(int type) {
   switch (type) {
-    case 0: return "in-place";
-    case 1: return "out-of-place";
-    case 2: return "hybrid";
-    default: return "ERROR";
+    case 0:
+      return "in-place";
+    case 1:
+      return "out-of-place";
+    case 2:
+      return "hybrid";
+    default:
+      return "ERROR";
   }
 }
-
 
 int main(int argc, char* argv[]) {
   if (argc != 4) {
@@ -36,5 +41,6 @@ int main(int argc, char* argv[]) {
 
   int matrix_width = BASE_WIDTH * pow(2, power);
 
-  printf("BASE_WIDTH: %d, Matrix Width: %d, Mem Usage Limit: %d, type: %s\n", BASE_WIDTH, matrix_width, MEM_USAGE_LIMIT, mm_type(type));
+  printf("BASE_WIDTH: %d, Matrix Width: %d, Mem Usage Limit: %d, type: %s\n",
+         BASE_WIDTH, matrix_width, MEM_USAGE_LIMIT, mm_type(type));
 }

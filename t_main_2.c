@@ -1,7 +1,7 @@
-#include "square_matrix.h"
+#include "matrix_ops.c"
 #include "matrix_ops.h"
 #include "square_matrix.c"
-#include "matrix_ops.c"
+#include "square_matrix.h"
 
 // Ensure that mm_in, mm_out, and mm_hybrid produce the same result
 int main(void) {
@@ -9,26 +9,26 @@ int main(void) {
   struct SquareMatrix x = allocate_matrix(prob_width);
 
   int prob_size = prob_width * prob_width;
-  for(int i = 0; i < prob_width; i++) {
-    for(int j = 0; j < prob_width; j++) {
+  for (int i = 0; i < prob_width; i++) {
+    for (int j = 0; j < prob_width; j++) {
       int index = i * prob_width + j;
       x.data[index] = index;
     }
   }
-/*
-  struct SquareMatrix x_11 = quadrant_11(&x);
-  struct SquareMatrix x_12 = quadrant_12(&x);
-  struct SquareMatrix x_21 = quadrant_21(&x);
-  struct SquareMatrix x_22 = quadrant_22(&x);
-  printf("x_11\n");
-  print_row_major_matrix(&x_11);
-  printf("x_12\n");
-  print_row_major_matrix(&x_12);
-  printf("x_21\n");
-  print_row_major_matrix(&x_21);
-  printf("x_22\n");
-  print_row_major_matrix(&x_22);
-*/
+  /*
+    struct SquareMatrix x_11 = quadrant_11(&x);
+    struct SquareMatrix x_12 = quadrant_12(&x);
+    struct SquareMatrix x_21 = quadrant_21(&x);
+    struct SquareMatrix x_22 = quadrant_22(&x);
+    printf("x_11\n");
+    print_row_major_matrix(&x_11);
+    printf("x_12\n");
+    print_row_major_matrix(&x_12);
+    printf("x_21\n");
+    print_row_major_matrix(&x_21);
+    printf("x_22\n");
+    print_row_major_matrix(&x_22);
+  */
 
   printf("First\n");
   print_row_major_matrix(&x);
@@ -42,4 +42,3 @@ int main(void) {
   printf("Row\n");
   print_row_major_matrix(&z);
 }
-

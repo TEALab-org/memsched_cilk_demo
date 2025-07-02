@@ -27,9 +27,9 @@ struct SquareMatrix quadrant_21(struct SquareMatrix* m);
 // Return fourth quadrant of m
 struct SquareMatrix quadrant_22(struct SquareMatrix* m);
 
-void to_row_major(struct SquareMatrix *x, struct SquareMatrix *r);
+void to_row_major(struct SquareMatrix* x, struct SquareMatrix* r);
 
-void to_hybrid_major(struct SquareMatrix *x, struct SquareMatrix *r);
+void to_hybrid_major(struct SquareMatrix* x, struct SquareMatrix* r);
 
 void print_base_matrix(struct SquareMatrix* m);
 

@@ -1,39 +1,45 @@
-#ifndef MATRIX_OPS_C 
-#define MATRIX_OPS_C 
+#ifndef MATRIX_OPS_C
+#define MATRIX_OPS_C
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <assert.h>
 #include "matrix_ops.h"
+
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "allocator.h"
 #include "cilk.h"
 
 // Add b to a
 void mm_add(struct SquareMatrix* x, struct SquareMatrix* y) {
-  assert(x->width == y-> width);
-  for(int i = 0; i < x->width * x->width; i++) {
+  assert(x->width == y->width);
+  for (int i = 0; i < x->width * x->width; i++) {
     x->data[i] += y->data[i];
   }
 }
 
 // Assume row major order
-void mm_seq(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix* z) {
+void mm_seq(struct SquareMatrix* x,
+            struct SquareMatrix* y,
+            struct SquareMatrix* z) {
   assert(x->width == y->width);
   assert(y->width == z->width);
   int width = x->width;
-  for(int i = 0; i < width; i++) {
-    for(int j = 0; j < width; j++) {
+  for (int i = 0; i < width; i++) {
+    for (int j = 0; j < width; j++) {
       int z_index = i * width + j;
-      for(int k = 0; k < width; k++) {
-        int x_index = i * width+ k;
-        int y_index = k * width+ j;
+      for (int k = 0; k < width; k++) {
+        int x_index = i * width + k;
+        int y_index = k * width + j;
         z->data[z_index] += x->data[x_index] * y->data[y_index];
       }
     }
   }
 }
 
-void mm_in(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix* z) {
+void mm_in(struct SquareMatrix* x,
+           struct SquareMatrix* y,
+           struct SquareMatrix* z) {
   assert(x->width == y->width);
   assert(x->width == z->width);
 
@@ -70,7 +76,9 @@ void mm_in(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix* 
   cilk_sync;
 }
 
-void mm_out(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix* z) {
+void mm_out(struct SquareMatrix* x,
+            struct SquareMatrix* y,
+            struct SquareMatrix* z) {
   assert(x->width == y->width);
   assert(x->width == z->width);
 
@@ -117,7 +125,9 @@ void mm_out(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix*
   free_matrix(&t);
 }
 
-void mm_hybrid(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix* z) {
+void mm_hybrid(struct SquareMatrix* x,
+               struct SquareMatrix* y,
+               struct SquareMatrix* z) {
   assert(x->width == y->width);
   assert(x->width == z->width);
 
