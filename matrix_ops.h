@@ -8,11 +8,20 @@
 // Add y to x
 void mm_add(struct SquareMatrix* x, struct SquareMatrix* y);
 
-/// Assume row major order
+// Sequential matrix multiplication
+// Assume row major order
 void mm_seq(struct SquareMatrix* a, struct SquareMatrix* b, struct SquareMatrix* r);
 
+// In place recursive matrix multiplication
+// Assume hybrid major order
 void mm_in(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix* z);
 
+// Out-of-place recursive matrix multiplication
+// Assume hybrid major order
 void mm_out(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix* z);
+
+// Hybrid recursive matrix multiplication
+// Assume hybrid major order
+void mm_hybrid(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix* z);
 
 #endif
