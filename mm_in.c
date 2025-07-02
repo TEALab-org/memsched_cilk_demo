@@ -16,18 +16,15 @@ void mm_add(struct SquareMatrix* x, struct SquareMatrix* y) {
 
 // Assume row major order
 void mm_seq(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix* z) {
-  assert(x->width == BASE_WIDTH);
-  assert(y->width == BASE_WIDTH);
-  assert(z->width == BASE_WIDTH);
-
-  for(int i = 0; i < BASE_WIDTH; i++) {
-    for(int j = 0; j < BASE_WIDTH; j++) {
-      int z_index = i * BASE_WIDTH + j;
-      //z->data[z_index] = 0.0;
-
-      for(int k = 0; k < BASE_WIDTH; k++) {
-        int x_index = i * BASE_WIDTH + k;
-        int y_index = k * BASE_WIDTH + j;
+  assert(x->width == y->width);
+  assert(y->width == z->width);
+  int width = x->width;
+  for(int i = 0; i < width; i++) {
+    for(int j = 0; j < width; j++) {
+      int z_index = i * width + j;
+      for(int k = 0; k < width; k++) {
+        int x_index = i * width+ k;
+        int y_index = k * width+ j;
         z->data[z_index] += x->data[x_index] * y->data[y_index];
       }
     }
@@ -89,14 +86,17 @@ void mm_out(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix*
   struct SquareMatrix x_12 = quadrant_12(x);
   struct SquareMatrix x_21 = quadrant_21(x);
   struct SquareMatrix x_22 = quadrant_22(x);
+
   struct SquareMatrix y_11 = quadrant_11(y);
   struct SquareMatrix y_12 = quadrant_12(y);
   struct SquareMatrix y_21 = quadrant_21(y);
   struct SquareMatrix y_22 = quadrant_22(y);
+
   struct SquareMatrix z_11 = quadrant_11(z);
   struct SquareMatrix z_12 = quadrant_12(z);
   struct SquareMatrix z_21 = quadrant_21(z);
   struct SquareMatrix z_22 = quadrant_22(z);
+
   struct SquareMatrix t_11 = quadrant_11(&t);
   struct SquareMatrix t_12 = quadrant_12(&t);
   struct SquareMatrix t_21 = quadrant_21(&t);

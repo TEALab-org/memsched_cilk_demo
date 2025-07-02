@@ -29,5 +29,9 @@ struct SquareMatrix quadrant_22(struct SquareMatrix* m);
 
 void to_row_major(struct SquareMatrix *x, struct SquareMatrix *r);
 
+void to_hybrid_major(struct SquareMatrix *x, struct SquareMatrix *r);
+
 void print_base_matrix(struct SquareMatrix* m);
+
+void print_row_major_matrix(struct SquareMatrix* m);
 #endif

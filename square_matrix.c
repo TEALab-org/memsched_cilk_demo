@@ -16,7 +16,6 @@ void free_matrix(struct SquareMatrix* m) {
   free(m->data);
 }
 
-
 struct SquareMatrix quadrant_11(struct SquareMatrix* m) {
   struct SquareMatrix result;
   result.data = m->data;
