@@ -48,4 +48,16 @@ struct SquareMatrix quadrant_22(struct SquareMatrix* m) {
   return result;
 }
 
+void print_base_matrix(struct SquareMatrix* m) {
+  assert(m->width == BASE_WIDTH);
+  for(int i = 0; i < BASE_WIDTH; i++) {
+    for(int j = 0; j < BASE_WIDTH; j++) {
+      int index = i * BASE_WIDTH + j;
+      printf("%f, ", m->data[index]);
+    }
+    printf("\n");
+  }
+}
+
+
 #endif
