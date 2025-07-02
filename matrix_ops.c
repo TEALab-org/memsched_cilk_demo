@@ -11,6 +11,9 @@
 // Add b to a
 void mm_add(struct SquareMatrix* x, struct SquareMatrix* y) {
   assert(x->width == y->width);
+  assert(x->data != NULL);
+  assert(y->data != NULL);
+
   for (int i = 0; i < x->width * x->width; i++) {
     x->data[i] += y->data[i];
   }
@@ -22,6 +25,10 @@ void mm_seq(struct SquareMatrix* x,
             struct SquareMatrix* z) {
   assert(x->width == y->width);
   assert(y->width == z->width);
+  assert(x->data != NULL);
+  assert(y->data != NULL);
+  assert(z->data != NULL);
+
   int width = x->width;
   for (int i = 0; i < width; i++) {
     for (int j = 0; j < width; j++) {
@@ -40,6 +47,9 @@ void mm_in(struct SquareMatrix* x,
            struct SquareMatrix* z) {
   assert(x->width == y->width);
   assert(x->width == z->width);
+  assert(x->data != NULL);
+  assert(y->data != NULL);
+  assert(z->data != NULL);
 
   if (x->width <= BASE_WIDTH) {
     mm_seq(x, y, z);
@@ -79,6 +89,9 @@ void mm_out(struct SquareMatrix* x,
             struct SquareMatrix* z) {
   assert(x->width == y->width);
   assert(x->width == z->width);
+  assert(x->data != NULL);
+  assert(y->data != NULL);
+  assert(z->data != NULL);
 
   if (x->width <= BASE_WIDTH) {
     mm_seq(x, y, z);
@@ -87,6 +100,10 @@ void mm_out(struct SquareMatrix* x,
 
   int prob_size = x->width * x->width;
   struct SquareMatrix t = allocate_matrix(x->width);
+  if (t.data == NULL) {
+    printf("ERROR: allocation failed");
+    exit;
+  }
 
   struct SquareMatrix x_11 = quadrant_11(x);
   struct SquareMatrix x_12 = quadrant_12(x);
@@ -128,6 +145,9 @@ void mm_hybrid(struct SquareMatrix* x,
                struct SquareMatrix* z) {
   assert(x->width == y->width);
   assert(x->width == z->width);
+  assert(x->data != NULL);
+  assert(y->data != NULL);
+  assert(z->data != NULL);
 
   if (x->width <= BASE_WIDTH) {
     mm_seq(x, y, z);
@@ -148,35 +168,35 @@ void mm_hybrid(struct SquareMatrix* x,
   struct SquareMatrix z_12 = quadrant_12(z);
   struct SquareMatrix z_21 = quadrant_21(z);
   struct SquareMatrix z_22 = quadrant_22(z);
-
-  if (get_total_mem() >= MEM_USAGE_LIMIT) {
-    cilk_spawn mm_in(&x_11, &y_11, &z_11);
-    cilk_spawn mm_in(&x_11, &y_12, &z_12);
-    cilk_spawn mm_in(&x_21, &y_11, &z_21);
-    cilk_spawn mm_in(&x_21, &y_12, &z_22);
+  
+  struct SquareMatrix t = allocate_matrix(x->width);
+  if (t.data == NULL) {
+    cilk_spawn mm_hybrid(&x_11, &y_11, &z_11);
+    cilk_spawn mm_hybrid(&x_11, &y_12, &z_12);
+    cilk_spawn mm_hybrid(&x_21, &y_11, &z_21);
+    cilk_spawn mm_hybrid(&x_21, &y_12, &z_22);
     cilk_sync;
 
-    cilk_spawn mm_in(&x_12, &y_21, &z_11);
-    cilk_spawn mm_in(&x_12, &y_22, &z_12);
-    cilk_spawn mm_in(&x_22, &y_21, &z_21);
-    cilk_spawn mm_in(&x_22, &y_22, &z_22);
+    cilk_spawn mm_hybrid(&x_12, &y_21, &z_11);
+    cilk_spawn mm_hybrid(&x_12, &y_22, &z_12);
+    cilk_spawn mm_hybrid(&x_22, &y_21, &z_21);
+    cilk_spawn mm_hybrid(&x_22, &y_22, &z_22);
     cilk_sync;
   } else {
-    struct SquareMatrix t = allocate_matrix(x->width);
     struct SquareMatrix t_11 = quadrant_11(&t);
     struct SquareMatrix t_12 = quadrant_12(&t);
     struct SquareMatrix t_21 = quadrant_21(&t);
     struct SquareMatrix t_22 = quadrant_22(&t);
 
     // Parallel
-    cilk_spawn mm_out(&x_11, &y_11, &z_11);
-    cilk_spawn mm_out(&x_11, &y_12, &z_12);
-    cilk_spawn mm_out(&x_21, &y_11, &z_21);
-    cilk_spawn mm_out(&x_21, &y_12, &z_22);
-    cilk_spawn mm_out(&x_12, &y_21, &t_11);
-    cilk_spawn mm_out(&x_12, &y_22, &t_12);
-    cilk_spawn mm_out(&x_22, &y_21, &t_21);
-    cilk_spawn mm_out(&x_22, &y_22, &t_22);
+    cilk_spawn mm_hybrid(&x_11, &y_11, &z_11);
+    cilk_spawn mm_hybrid(&x_11, &y_12, &z_12);
+    cilk_spawn mm_hybrid(&x_21, &y_11, &z_21);
+    cilk_spawn mm_hybrid(&x_21, &y_12, &z_22);
+    cilk_spawn mm_hybrid(&x_12, &y_21, &t_11);
+    cilk_spawn mm_hybrid(&x_12, &y_22, &t_12);
+    cilk_spawn mm_hybrid(&x_22, &y_21, &t_21);
+    cilk_spawn mm_hybrid(&x_22, &y_22, &t_22);
     cilk_sync;
 
     mm_add(z, &t);

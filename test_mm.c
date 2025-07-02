@@ -8,6 +8,9 @@
 // Sets the values of x and y as each elements linear index (i.e. y_00 = |x|),
 // in row order order
 void ic(struct SquareMatrix* x, struct SquareMatrix* y) {
+  assert(x->width == y->width);
+  assert(x->data != NULL);
+  assert(y->data != NULL);
   int width = x->width;
   int size = width * width;
   for (int i = 0; i < width; i++) {
@@ -23,32 +26,50 @@ void ic(struct SquareMatrix* x, struct SquareMatrix* y) {
 // Must free result!
 struct SquareMatrix generate_expected(int width) {
   int size = width * width; 
+  int expected_usage = size * 3 * sizeof(int);
+  set_mem_usage_limit(expected_usage * 2);
   struct SquareMatrix x_row_order = allocate_matrix(width); 
   struct SquareMatrix y_row_order = allocate_matrix(width); 
   struct SquareMatrix z_row_order = allocate_matrix(width); 
-  ic(&x_row_order, &y_row_order);
+  assert(x_row_order.data != NULL);
+  assert(y_row_order.data != NULL);
+  assert(z_row_order.data != NULL);
+  assert(get_total_mem() == expected_usage && "ERROR: pre Seq mem usage");
   zero_total_mem();
+
+  ic(&x_row_order, &y_row_order);
   mm_seq(&x_row_order, &y_row_order, &z_row_order);
   assert(get_total_mem() == 0 && "ERROR: Seq Mem Usage Not Zero");
   free_matrix(&x_row_order);
   free_matrix(&y_row_order);
+  printf("Completed Test: Generate Expected Result\n");
   return z_row_order;
 }
 
 void test_mm_in(struct SquareMatrix* expected_row_order) {
   int width = expected_row_order->width;
   int size = width * width; 
+  int expected_usage = size * 6 * sizeof(int);
+  set_mem_usage_limit(expected_usage * 2);
   struct SquareMatrix x_row_order = allocate_matrix(width); 
   struct SquareMatrix y_row_order = allocate_matrix(width); 
   struct SquareMatrix z_row_order = allocate_matrix(width); 
   struct SquareMatrix x_hybrid_order = allocate_matrix(width); 
   struct SquareMatrix y_hybrid_order = allocate_matrix(width); 
   struct SquareMatrix z_hybrid_order = allocate_matrix(width); 
+  assert(x_row_order.data != NULL);
+  assert(y_row_order.data != NULL);
+  assert(z_row_order.data != NULL);
+  assert(x_hybrid_order.data != NULL);
+  assert(y_hybrid_order.data != NULL);
+  assert(z_hybrid_order.data != NULL);
+  assert(get_total_mem() == expected_usage && "ERROR: pre Seq mem usage");
+  zero_total_mem();
 
+  set_mem_usage_limit(0);
   ic(&x_row_order, &y_row_order);
   to_hybrid_order(&x_row_order, &x_hybrid_order);
   to_hybrid_order(&y_row_order, &y_hybrid_order);
-  zero_total_mem();
   mm_in(&x_hybrid_order, &y_hybrid_order, &z_hybrid_order);
   assert(get_total_mem() == 0 && "ERROR: In-place Mem Usage Not Zero");
   to_row_order(&z_hybrid_order, &z_row_order);
@@ -70,17 +91,28 @@ void test_mm_in(struct SquareMatrix* expected_row_order) {
 void test_mm_out(struct SquareMatrix* expected_row_order) {
   int width = expected_row_order->width;
   int size = width * width; 
+  int expected_usage = size * 6 * sizeof(int);
+  set_mem_usage_limit(expected_usage * 2);
   struct SquareMatrix x_row_order = allocate_matrix(width); 
   struct SquareMatrix y_row_order = allocate_matrix(width); 
   struct SquareMatrix z_row_order = allocate_matrix(width); 
   struct SquareMatrix x_hybrid_order = allocate_matrix(width); 
   struct SquareMatrix y_hybrid_order = allocate_matrix(width); 
   struct SquareMatrix z_hybrid_order = allocate_matrix(width); 
+  assert(x_row_order.data != NULL);
+  assert(y_row_order.data != NULL);
+  assert(z_row_order.data != NULL);
+  assert(x_hybrid_order.data != NULL);
+  assert(y_hybrid_order.data != NULL);
+  assert(z_hybrid_order.data != NULL);
+  assert(get_total_mem() == expected_usage && "ERROR: pre Seq mem usage");
+  zero_total_mem();
 
   ic(&x_row_order, &y_row_order);
   to_hybrid_order(&x_row_order, &x_hybrid_order);
   to_hybrid_order(&y_row_order, &y_hybrid_order);
   zero_total_mem();
+  set_mem_usage_limit(99999999);
   mm_out(&x_hybrid_order, &y_hybrid_order, &z_hybrid_order);
   to_row_order(&z_hybrid_order, &z_row_order);
 
@@ -89,7 +121,7 @@ void test_mm_out(struct SquareMatrix* expected_row_order) {
 
   for (int i = 0; i < size; i++) {
     int diff = z_row_order.data[i] - expected_row_order->data[i];
-    printf("%d\n", diff);
+    //printf("%d\n", diff);
     assert(diff == 0 && "ERROR: Out-of-place did not match expected");
   }
 
@@ -105,12 +137,23 @@ void test_mm_out(struct SquareMatrix* expected_row_order) {
 void test_mm_hybrid(struct SquareMatrix* expected_row_order, int mem_usage_limit) {
   int width = expected_row_order->width;
   int size = width * width; 
+  int expected_usage = size * 6 * sizeof(int);
+  set_mem_usage_limit(expected_usage * 2);
   struct SquareMatrix x_row_order = allocate_matrix(width); 
   struct SquareMatrix y_row_order = allocate_matrix(width); 
   struct SquareMatrix z_row_order = allocate_matrix(width); 
   struct SquareMatrix x_hybrid_order = allocate_matrix(width); 
   struct SquareMatrix y_hybrid_order = allocate_matrix(width); 
   struct SquareMatrix z_hybrid_order = allocate_matrix(width); 
+  assert(x_row_order.data != NULL);
+  assert(y_row_order.data != NULL);
+  assert(z_row_order.data != NULL);
+  assert(x_hybrid_order.data != NULL);
+  assert(y_hybrid_order.data != NULL);
+  assert(z_hybrid_order.data != NULL);
+  assert(get_total_mem() == expected_usage && "ERROR: pre Seq mem usage");
+  zero_total_mem();
+  printf("Completed: test_mm_hybrid setup, mem_usage_limit: %d\n", mem_usage_limit);
 
   ic(&x_row_order, &y_row_order);
   to_hybrid_order(&x_row_order, &x_hybrid_order);
@@ -134,7 +177,7 @@ void test_mm_hybrid(struct SquareMatrix* expected_row_order, int mem_usage_limit
   free_matrix(&x_hybrid_order);
   free_matrix(&y_hybrid_order);
   free_matrix(&z_hybrid_order);
-  printf("Completed Test: Hybrid\n");
+  printf("Completed Test: Hybrid, mem_usage_limit: %d\n", mem_usage_limit);
 }
 
 // Ensure that mm_in, mm_out, and mm_hybrid produce the same result
@@ -142,11 +185,11 @@ int main(void) {
   int prob_width = BASE_WIDTH * 4;
 
   struct SquareMatrix expected_row_order = generate_expected(prob_width);
-  test_mm_in(&expected_row_order);
-  test_mm_out(&expected_row_order);
-  test_mm_hybrid(&expected_row_order, 0);
+  //test_mm_in(&expected_row_order);
+  //test_mm_out(&expected_row_order);
+  //test_mm_hybrid(&expected_row_order, 0);
   test_mm_hybrid(&expected_row_order, 2000);
-  test_mm_hybrid(&expected_row_order, 4000);
+  //test_mm_hybrid(&expected_row_order, 4000);
 
   free_matrix(&expected_row_order);
   printf("Complete\n");

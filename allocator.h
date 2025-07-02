@@ -11,6 +11,13 @@ int MEM_USAGE_LIMIT = 0;
 
 void* t_malloc(int bytes) {
   atomic_fetch_add_explicit(&total_mem, bytes, memory_order_relaxed);
+  int a_total_mem = atomic_load(&total_mem);
+  if ( a_total_mem > MEM_USAGE_LIMIT) {
+    atomic_fetch_add_explicit(&total_mem, -bytes, memory_order_relaxed);
+    printf("Alloc Failed, total_mem: %d, limit: %d\n", a_total_mem, MEM_USAGE_LIMIT);
+    return NULL; 
+  }
+  printf("Alloc Success \n");
   return malloc(bytes);
 }
 
