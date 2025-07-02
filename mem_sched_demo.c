@@ -43,4 +43,33 @@ int main(int argc, char* argv[]) {
 
   printf("BASE_WIDTH: %d, Matrix Width: %d, Mem Usage Limit: %d, type: %s\n",
          BASE_WIDTH, matrix_width, MEM_USAGE_LIMIT, mm_type(type));
+
+  struct SquareMatrix x = allocate_matrix(matrix_width);
+  struct SquareMatrix y = allocate_matrix(matrix_width);
+  struct SquareMatrix z = allocate_matrix(matrix_width);
+
+  let matrix_size = matrix_width * matrix_width;
+  for (int i = 0; i < matrix_width; i++) {
+    for (int j = 0; j < matrix_width; j++) {
+      int index = i * matrix_width + j;
+      x.data[index] = index;
+      y.data[index] = index + matrix_size;
+    }
+  }
+
+  switch (type) {
+    case 0:
+      mm_in(&x, &y, &z);
+      break;
+    case 1:
+      mm_out(&x, &y, &z);
+      break;
+    case 2:
+      mm_hybrid(&x, &y, &z);
+      break;
+    default: 
+      printf("ERROR\n");
+  }
+
+  printf("Done, z[0]: %d\n", z.data[0]);
 }

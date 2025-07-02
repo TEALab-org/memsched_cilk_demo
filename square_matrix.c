@@ -2,7 +2,6 @@
 #define SQUARE_MATRIX_C
 
 #include "square_matrix.h"
-
 #include "allocator.h"
 
 struct SquareMatrix allocate_matrix(int width) {
