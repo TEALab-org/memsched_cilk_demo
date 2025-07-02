@@ -5,10 +5,10 @@ This repo contains an experiment / demonstration for memory aware scheduling.
 ## Example
 ```
 clang \
-	-fopencilk \
-	-std=c11 \
-	-O3 \
-	mem_sched_demo.c \
+    -fopencilk \
+    -std=c11 \
+    -O3 \
+    mem_sched_demo.c \
     -o mem_sched_demo
 
 # Run with 
