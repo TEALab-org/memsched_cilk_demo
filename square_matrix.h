@@ -4,7 +4,7 @@
 int BASE_WIDTH = 4;
 
 struct SquareMatrix {
-  double* data;
+  int* data;
   int width;
 };
 
@@ -27,4 +27,7 @@ struct SquareMatrix quadrant_21(struct SquareMatrix* m);
 // Return fourth quadrant of m
 struct SquareMatrix quadrant_22(struct SquareMatrix* m);
 
+void to_row_major(struct SquareMatrix *x, struct SquareMatrix *r);
+
+void print_base_matrix(struct SquareMatrix* m);
 #endif

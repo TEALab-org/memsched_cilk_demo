@@ -5,7 +5,7 @@
 
 struct SquareMatrix allocate_matrix(int width) {
   int size = width * width;
-  double* data = malloc(size * sizeof(double));
+  int* data = malloc(size * sizeof(int));
   struct SquareMatrix result;
   result.data = data;
   result.width = width;
@@ -53,10 +53,79 @@ void print_base_matrix(struct SquareMatrix* m) {
   for(int i = 0; i < BASE_WIDTH; i++) {
     for(int j = 0; j < BASE_WIDTH; j++) {
       int index = i * BASE_WIDTH + j;
-      printf("%f, ", m->data[index]);
+      printf("%d, ", m->data[index]);
     }
     printf("\n");
   }
+}
+
+// X is in row major
+// R should be hybrid major
+// Recursivley break apart R into base size matrices
+void to_hybrid_major_rec(int i, int j, struct SquareMatrix *x, struct SquareMatrix *r) {
+  if (r->width <= BASE_WIDTH) {
+    for (int xi = 0; xi < BASE_WIDTH; xi++) {
+      for (int xj = 0; xj < BASE_WIDTH; xj++) {
+        int r_index = xi * BASE_WIDTH + xj;
+        int x_index = (i + xi) * x->width + (j + xj);
+        r->data[r_index] = x->data[x_index];
+      }
+    }
+  } else {
+    struct SquareMatrix r_11 = quadrant_11(r);
+    struct SquareMatrix r_12 = quadrant_12(r);
+    struct SquareMatrix r_21 = quadrant_21(r);
+    struct SquareMatrix r_22 = quadrant_22(r);
+    int quad_width = r_11.width;
+
+    to_hybrid_major_rec(i, j, x, &r_11);
+    to_hybrid_major_rec(i, j + quad_width, x, &r_12);
+    to_hybrid_major_rec(i + quad_width, j, x, &r_21);
+    to_hybrid_major_rec(i + quad_width, j + quad_width, x, &r_22);
+  }
+}
+
+void to_hybrid_major(struct SquareMatrix *x, struct SquareMatrix *r) {
+  assert(x->width == r->width);
+  to_hybrid_major_rec(0, 0, x, r);
+}
+
+void to_row_major_rec(int i, int j, struct SquareMatrix *x, struct SquareMatrix *r) {
+  if (x->width <= BASE_WIDTH) {
+    for (int xi = 0; xi < BASE_WIDTH; xi++) {
+      for (int xj = 0; xj < BASE_WIDTH; xj++) {
+        int x_index = xi * BASE_WIDTH + xj;
+        int r_index = (i + xi) * r->width + (j + xj);
+        r->data[r_index] = x->data[x_index];
+      }
+    }
+  } else {
+    struct SquareMatrix x_11 = quadrant_11(x);
+    struct SquareMatrix x_12 = quadrant_12(x);
+    struct SquareMatrix x_21 = quadrant_21(x);
+    struct SquareMatrix x_22 = quadrant_22(x);
+    int quad_width = x_11.width;
+
+    to_row_major_rec(i, j, &x_11, r);
+    to_row_major_rec(i, j + quad_width, &x_12, r);
+    to_row_major_rec(i + quad_width, j, &x_21, r);
+    to_row_major_rec(i + quad_width, j + quad_width, &x_22, r);
+  }
+}
+
+void to_row_major(struct SquareMatrix *x, struct SquareMatrix *r) {
+  assert(x->width == r->width);
+  to_row_major_rec(0, 0, x, r);
+}
+
+void print_row_major_matrix(struct SquareMatrix* m) {
+  for(int i = 0; i < m->width; i++) {
+    for(int j = 0; j < m->width; j++) {
+      int index = i * m->width + j;
+      printf("%d, ", m->data[index]);
+    }
+    printf("\n");
+  } 
 }
 
 

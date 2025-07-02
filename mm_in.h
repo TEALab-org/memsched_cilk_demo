@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <assert.h>
 
+// Add y to x
 void mm_add(struct SquareMatrix* x, struct SquareMatrix* y);
 
 /// Assume row major order
