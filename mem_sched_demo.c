@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
     case 2:
       mm_hybrid(&x, &y, &z);
       break;
-    default: 
+    default:
       printf("ERROR\n");
   }
 

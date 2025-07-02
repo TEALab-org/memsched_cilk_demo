@@ -64,6 +64,7 @@ void test_mm_in(struct SquareMatrix* expected_row_order) {
   free_matrix(&x_hybrid_order);
   free_matrix(&y_hybrid_order);
   free_matrix(&z_hybrid_order);
+  printf("Completed Test: In-place\n");
 }
 
 void test_mm_out(struct SquareMatrix* expected_row_order) {
@@ -98,6 +99,7 @@ void test_mm_out(struct SquareMatrix* expected_row_order) {
   free_matrix(&x_hybrid_order);
   free_matrix(&y_hybrid_order);
   free_matrix(&z_hybrid_order);
+  printf("Completed Test: Out-of-place\n");
 }
 
 void test_mm_hybrid(struct SquareMatrix* expected_row_order, int mem_usage_limit) {
@@ -132,6 +134,7 @@ void test_mm_hybrid(struct SquareMatrix* expected_row_order, int mem_usage_limit
   free_matrix(&x_hybrid_order);
   free_matrix(&y_hybrid_order);
   free_matrix(&z_hybrid_order);
+  printf("Completed Test: Hybrid\n");
 }
 
 // Ensure that mm_in, mm_out, and mm_hybrid produce the same result

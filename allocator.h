@@ -1,9 +1,9 @@
 #ifndef ALLOCATOR_H
 #define ALLOCATOR_H
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdatomic.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 atomic_int total_mem = 0;
 
