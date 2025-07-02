@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "mm_in.h"
+#include "cilk.h"
 
 // Add b to a
 void mm_add(struct SquareMatrix* x, struct SquareMatrix* y) {
@@ -56,17 +57,19 @@ void mm_in(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix* 
   struct SquareMatrix z_22 = quadrant_22(z);
 
   // Parallel
-  mm_in(&x_11, &y_11, &z_11);
-  mm_in(&x_11, &y_12, &z_12);
-  mm_in(&x_21, &y_11, &z_21);
-  mm_in(&x_21, &y_12, &z_22);
+  cilk_spawn mm_in(&x_11, &y_11, &z_11);
+  cilk_spawn mm_in(&x_11, &y_12, &z_12);
+  cilk_spawn mm_in(&x_21, &y_11, &z_21);
+  cilk_spawn mm_in(&x_21, &y_12, &z_22);
+  cilk_sync;
   // Sync
 
   // Parallel
-  mm_in(&x_12, &y_21, &z_11);
-  mm_in(&x_12, &y_22, &z_12);
-  mm_in(&x_22, &y_21, &z_21);
-  mm_in(&x_22, &y_22, &z_22);
+  cilk_spawn mm_in(&x_12, &y_21, &z_11);
+  cilk_spawn mm_in(&x_12, &y_22, &z_12);
+  cilk_spawn mm_in(&x_22, &y_21, &z_21);
+  cilk_spawn mm_in(&x_22, &y_22, &z_22);
+  cilk_sync;
   // Sync
 }
 
@@ -103,16 +106,15 @@ void mm_out(struct SquareMatrix* x, struct SquareMatrix* y, struct SquareMatrix*
   struct SquareMatrix t_22 = quadrant_22(&t);
 
   // Parallel
-  mm_out(&x_11, &y_11, &z_11);
-  mm_out(&x_11, &y_12, &z_12);
-  mm_out(&x_21, &y_11, &z_21);
-  mm_out(&x_21, &y_12, &z_22);
-
-  mm_out(&x_12, &y_21, &t_11);
-  mm_out(&x_12, &y_22, &t_12);
-  mm_out(&x_22, &y_21, &t_21);
-  mm_out(&x_22, &y_22, &t_22);
-  // Sync
+  cilk_spawn mm_out(&x_11, &y_11, &z_11);
+  cilk_spawn mm_out(&x_11, &y_12, &z_12);
+  cilk_spawn mm_out(&x_21, &y_11, &z_21);
+  cilk_spawn mm_out(&x_21, &y_12, &z_22);
+  cilk_spawn mm_out(&x_12, &y_21, &t_11);
+  cilk_spawn mm_out(&x_12, &y_22, &t_12);
+  cilk_spawn mm_out(&x_22, &y_21, &t_21);
+  cilk_spawn mm_out(&x_22, &y_22, &t_22);
+  cilk_sync;
 
   mm_add(z, &t);
   free_matrix(&t);

@@ -35,7 +35,7 @@ int main(void) {
   // seq
   mm_seq(&x_mm_seq, &y_mm_seq, &z_mm_seq);
 
-  // mm_out
+  // mm_in
   struct SquareMatrix x_hybrid_mm_in = allocate_matrix(prob_width);
   struct SquareMatrix y_hybrid_mm_in = allocate_matrix(prob_width);
   struct SquareMatrix z_hybrid_mm_in = allocate_matrix(prob_width);
@@ -44,18 +44,23 @@ int main(void) {
   mm_in(&x_hybrid_mm_in, &y_hybrid_mm_in, &z_hybrid_mm_in);
   to_row_major(&z_hybrid_mm_in, &z_mm_in);
 
-  printf("seq\n");
-  print_row_major_matrix(&z_mm_seq);
-
-  printf("mm_in\n");
-  print_row_major_matrix(&z_mm_in);
+  // mm_out
+  struct SquareMatrix x_hybrid_mm_out = allocate_matrix(prob_width);
+  struct SquareMatrix y_hybrid_mm_out = allocate_matrix(prob_width);
+  struct SquareMatrix z_hybrid_mm_out = allocate_matrix(prob_width);
+  to_hybrid_major(&x_mm_out, &x_hybrid_mm_out);
+  to_hybrid_major(&y_mm_out, &y_hybrid_mm_out);
+  mm_out(&x_hybrid_mm_out, &y_hybrid_mm_out, &z_hybrid_mm_out);
+  to_row_major(&z_hybrid_mm_out, &z_mm_out);
 
   for(int i = 0; i < prob_size; i++) {
-    if (i % prob_width == 0) {
-      printf("\n");
-    }
-    int diff = z_mm_seq.data[i] - z_mm_in.data[i];
-    printf("%d, ", diff);
+    int diff_in = z_mm_seq.data[i] - z_mm_in.data[i];
+    int diff_out = z_mm_seq.data[i] - z_mm_out.data[i];
+    assert(diff_in == 0);
+    assert(diff_out == 0);
   }
+
+  printf("Checks passed!\n");
+  return 0;
 }
 
