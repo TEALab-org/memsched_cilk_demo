@@ -2,10 +2,11 @@
 #define SQUARE_MATRIX_C
 
 #include "square_matrix.h"
+#include "allocator.h"
 
 struct SquareMatrix allocate_matrix(int width) {
   int size = width * width;
-  int* data = malloc(size * sizeof(int));
+  int* data = t_malloc(size * sizeof(int));
   struct SquareMatrix result;
   result.data = data;
   result.width = width;

@@ -1,5 +1,5 @@
-#ifndef MM_IN_H
-#define MM_IN_H
+#ifndef MATRIX_OPS_H 
+#define MATRIX_OPS_H 
 
 #include <stdlib.h>
 #include <stdio.h>

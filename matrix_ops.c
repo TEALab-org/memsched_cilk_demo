@@ -1,10 +1,10 @@
-#ifndef MM_IN_C
-#define MM_IN_C
+#ifndef MATRIX_OPS_C 
+#define MATRIX_OPS_C 
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include "mm_in.h"
+#include "matrix_ops.h"
 #include "cilk.h"
 
 // Add b to a

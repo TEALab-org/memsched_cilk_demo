@@ -1,8 +1,7 @@
 #include "square_matrix.h"
-#include "mm_in.h"
-
-#include "mm_in.c"
+#include "matrix_ops.h"
 #include "square_matrix.c"
+#include "matrix_ops.c"
 
 // Ensure that mm_in, mm_out, and mm_hybrid produce the same result
 int main(void) {
