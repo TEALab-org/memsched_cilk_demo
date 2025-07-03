@@ -205,11 +205,22 @@ void mm_hybrid(struct SquareMatrix* x,
   }
 }
 
-int mm_out_memory_usage(int base, int power) {
-  printf("mm_out_memory_usage, base: %d, power: %d\n", base, power);
-  int width = base * pow(2, power);
-  int size = width * width;
-  return power * size;
+size_t mm_out_memory_usage_rec(int base, int power) {
+  size_t width = base * pow(2, power);
+  size_t size = width * width;
+
+  if (power == 0) {
+    return 0;
+  } else {
+    return 8 * mm_out_memory_usage_rec(base, power - 1) + size;
+  }
 }
 
+size_t mm_out_memory_usage(int base, int power) {
+  size_t width = base * pow(2, power);
+  size_t size = width * width;
+  size_t buffers = 3 * size;
+  size_t use = mm_out_memory_usage_rec(base, power);
+  return buffers + use;
+}
 #endif

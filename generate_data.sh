@@ -1,9 +1,10 @@
-OUTPUT_DIR="data/macbook_run_01"
+OUTPUT_DIR="data/macbook_run_02"
 POW_MIN="5"
-POW_MAX="9"
+POW_MAX="10"
 # BASES=("1" "3" "5" "7" "11" "13");
-BASES=("1" "3");
-TYPES=("0" "1");
+BASES=("4")
+TYPES=("0" "1")
+FACTORS=("0.5" "0.2")
 N_TRIALS="5"
 CILK_WORKERS=8
 
@@ -24,6 +25,14 @@ for power in `seq $POW_MIN $POW_MAX`; do
       ./mem_sched_demo \
         "${timings_file}" \
         "${base}" "${power}" "max" "${N_TRIALS}" "${type}" 
+    done
+    for factor in "${FACTORS[@]}"; do
+      type="2"
+      echo "Running power ${power}, base ${base}, type: ${type}, factor: ${factor} ..."
+        timings_file="${OUTPUT_DIR}/p${power}_b${base}_t${type}_f${factor}.txt"
+        ./mem_sched_demo \
+          "${timings_file}" \
+          "${base}" "${power}" "${factor}" "${N_TRIALS}" "${type}" 
     done
   done
 done

@@ -9,7 +9,7 @@ struct SquareMatrix allocate_matrix(int width) {
   int* data = int_malloc(size);
   struct SquareMatrix result;
   result.data = data;
-  result.with = width;
+  result.width = width;
   return result;
 }
 

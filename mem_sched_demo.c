@@ -59,6 +59,12 @@ int main(int argc, char* argv[]) {
   if (strcmp(argv[4], "max") == 0) {
     printf("use max\n");
     storage_limit = (size_t)SIZE_MAX;
+  } else if (argv[4][0] == '0') {
+    printf("use float, %s\n", argv[4]);
+    size_t max_usage = mm_out_memory_usage(base, power);
+    char* end = NULL;
+    double factor = strtod(argv[4], &end);
+    storage_limit = (size_t) (factor * (double) max_usage);
   } else {
     printf("parse limit (%s)\n", argv[4]);
     storage_limit = atoi(argv[4]);
@@ -120,6 +126,7 @@ int main(int argc, char* argv[]) {
     double elapsed_s = (end - start) / 1000.0;
     size_t usage = total_ints_stored();
     fprintf(fp, "%zu %f %zu\n", matrix_size, elapsed_s, usage);
+    printf("Usage: %zu\n", usage);
   }
   fclose(fp);
 
