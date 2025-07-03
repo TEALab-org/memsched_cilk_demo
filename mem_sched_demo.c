@@ -48,6 +48,7 @@ char* mm_type(int type) {
 int main(int argc, char* argv[]) {
   // O B P M N T"
   if (argc != 7) {
+    printf("ERROR: unexpected argc: %d\n", argc);
     print_help();
     return 1;
   }
@@ -55,22 +56,26 @@ int main(int argc, char* argv[]) {
   int base = atoi(argv[2]);
   int power = atoi(argv[3]);
   size_t storage_limit = 0;
-  if (strcmp(argv[4], "max")) {
+  if (strcmp(argv[4], "max") == 0) {
+    printf("use max\n");
     storage_limit = (size_t)SIZE_MAX;
   } else {
+    printf("parse limit (%s)\n", argv[4]);
     storage_limit = atoi(argv[4]);
   }
   int n_trials = atoi(argv[5]);
   int type = atoi(argv[6]);
 
   int matrix_width = BASE_WIDTH * pow(2, power);
-  int matrix_size = matrix_width * matrix_width;
-  int problem_base_storage = 3 * matrix_size;
+  size_t matrix_size = (size_t) matrix_width * (size_t) matrix_width;
+  size_t problem_base_storage = 3 * matrix_size;
 
+  printf("output_path: %s\n", output_path);
   printf("base: %d\n", base);
   printf("power: %d\n", power);
   printf("width: %d\n", matrix_width);
-  printf("size: %d\n", matrix_size);
+  printf("size: %zu\n", matrix_size);
+  printf("storage_limit: %zu\n", storage_limit);
   printf("type: %s\n", mm_type(type));
   zero_storage();
   set_int_storage_limit(storage_limit);
@@ -114,7 +119,7 @@ int main(int argc, char* argv[]) {
     long end = get_time();
     double elapsed_s = (end - start) / 1000.0;
     int usage = total_ints_stored();
-    fprintf(fp, "%d, %f, %d,\n", matrix_size, elapsed_s, usage);
+    fprintf(fp, "%zu, %f, %d,\n", matrix_size, elapsed_s, usage);
   }
   fclose(fp);
 
