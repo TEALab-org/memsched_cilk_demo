@@ -65,7 +65,8 @@ int main(int argc, char* argv[]) {
   }
   int n_trials = atoi(argv[5]);
   int type = atoi(argv[6]);
-
+  
+  BASE_WIDTH = base;
   int matrix_width = BASE_WIDTH * pow(2, power);
   size_t matrix_size = (size_t) matrix_width * (size_t) matrix_width;
   size_t problem_base_storage = 3 * matrix_size;
@@ -98,7 +99,6 @@ int main(int argc, char* argv[]) {
     printf("ERROR: Failed to open file");
     exit(1);
   }
-  fprintf(fp, "size, time, n_ints,\n");
   for (int trial = 0; trial < n_trials; trial++) {
     printf("Running trial: %d...\n", trial);
     set_int_storage(problem_base_storage);
@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
     long end = get_time();
     double elapsed_s = (end - start) / 1000.0;
     int usage = total_ints_stored();
-    fprintf(fp, "%zu, %f, %d,\n", matrix_size, elapsed_s, usage);
+    fprintf(fp, "%zu %f %d\n", matrix_size, elapsed_s, usage);
   }
   fclose(fp);
 
