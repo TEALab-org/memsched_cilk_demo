@@ -1,3 +1,7 @@
 *.txt
 *.out
 *.dSYM
+*.csv
+
+mem_sched_demo
+test_mm

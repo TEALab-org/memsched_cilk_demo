@@ -27,6 +27,10 @@ void zero_storage() {
   atomic_store(&A_TOTAL_INTS_STORED, 0.0);
 }
 
+void set_int_storage(int ints_stored) {
+  atomic_store(&A_TOTAL_INTS_STORED, ints_stored);
+}
+
 void print_total_ints_stored() {
   int ints_stored = atomic_load(&A_TOTAL_INTS_STORED);
   printf("Total bytes allocated: %d\n", ints_stored);
