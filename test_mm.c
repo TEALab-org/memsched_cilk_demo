@@ -1,9 +1,9 @@
+#include <assert.h>
 #include "allocator.h"
 #include "matrix_ops.c"
 #include "matrix_ops.h"
 #include "square_matrix.c"
 #include "square_matrix.h"
-#include <assert.h>
 
 // Sets the values of x and y as each elements linear index (i.e. y_00 = |x|),
 // in row order order
@@ -20,23 +20,24 @@ void ic(struct SquareMatrix* x, struct SquareMatrix* y) {
       x->data[index] = index;
       y->data[index] = index + size;
     }
-  } 
+  }
 }
 
 // Generate expected result with sequential solver
 // Must free result!
 struct SquareMatrix generate_expected(int width) {
   printf("Running generate_expected...\n");
-  int size = width * width; 
+  int size = width * width;
   int expected_n_ints_stored = size * 3;
   set_int_storage_limit(expected_n_ints_stored * 2);
-  struct SquareMatrix x_row_order = allocate_matrix(width); 
-  struct SquareMatrix y_row_order = allocate_matrix(width); 
-  struct SquareMatrix z_row_order = allocate_matrix(width); 
+  struct SquareMatrix x_row_order = allocate_matrix(width);
+  struct SquareMatrix y_row_order = allocate_matrix(width);
+  struct SquareMatrix z_row_order = allocate_matrix(width);
   assert(x_row_order.data != NULL);
   assert(y_row_order.data != NULL);
   assert(z_row_order.data != NULL);
-  assert(total_ints_stored() == expected_n_ints_stored && "ERROR: pre Seq mem usage");
+  assert(total_ints_stored() == expected_n_ints_stored &&
+         "ERROR: pre Seq mem usage");
   zero_storage();
 
   ic(&x_row_order, &y_row_order);
@@ -51,22 +52,23 @@ struct SquareMatrix generate_expected(int width) {
 void test_mm_in(struct SquareMatrix* expected_row_order) {
   printf("Running test_mm_in...\n");
   int width = expected_row_order->width;
-  int size = width * width; 
+  int size = width * width;
   int expected_n_ints_stored = size * 6;
   set_int_storage_limit(expected_n_ints_stored * 2);
-  struct SquareMatrix x_row_order = allocate_matrix(width); 
-  struct SquareMatrix y_row_order = allocate_matrix(width); 
-  struct SquareMatrix z_row_order = allocate_matrix(width); 
-  struct SquareMatrix x_hybrid_order = allocate_matrix(width); 
-  struct SquareMatrix y_hybrid_order = allocate_matrix(width); 
-  struct SquareMatrix z_hybrid_order = allocate_matrix(width); 
+  struct SquareMatrix x_row_order = allocate_matrix(width);
+  struct SquareMatrix y_row_order = allocate_matrix(width);
+  struct SquareMatrix z_row_order = allocate_matrix(width);
+  struct SquareMatrix x_hybrid_order = allocate_matrix(width);
+  struct SquareMatrix y_hybrid_order = allocate_matrix(width);
+  struct SquareMatrix z_hybrid_order = allocate_matrix(width);
   assert(x_row_order.data != NULL);
   assert(y_row_order.data != NULL);
   assert(z_row_order.data != NULL);
   assert(x_hybrid_order.data != NULL);
   assert(y_hybrid_order.data != NULL);
   assert(z_hybrid_order.data != NULL);
-  assert(total_ints_stored() == expected_n_ints_stored && "ERROR: pre Seq mem usage");
+  assert(total_ints_stored() == expected_n_ints_stored &&
+         "ERROR: pre Seq mem usage");
   zero_storage();
 
   set_int_storage_limit(0);
@@ -94,22 +96,23 @@ void test_mm_in(struct SquareMatrix* expected_row_order) {
 void test_mm_out(struct SquareMatrix* expected_row_order) {
   printf("Running test_mm_out...\n");
   int width = expected_row_order->width;
-  int size = width * width; 
+  int size = width * width;
   int expected_n_ints_stored = size * 6;
   set_int_storage_limit(expected_n_ints_stored * 2);
-  struct SquareMatrix x_row_order = allocate_matrix(width); 
-  struct SquareMatrix y_row_order = allocate_matrix(width); 
-  struct SquareMatrix z_row_order = allocate_matrix(width); 
-  struct SquareMatrix x_hybrid_order = allocate_matrix(width); 
-  struct SquareMatrix y_hybrid_order = allocate_matrix(width); 
-  struct SquareMatrix z_hybrid_order = allocate_matrix(width); 
+  struct SquareMatrix x_row_order = allocate_matrix(width);
+  struct SquareMatrix y_row_order = allocate_matrix(width);
+  struct SquareMatrix z_row_order = allocate_matrix(width);
+  struct SquareMatrix x_hybrid_order = allocate_matrix(width);
+  struct SquareMatrix y_hybrid_order = allocate_matrix(width);
+  struct SquareMatrix z_hybrid_order = allocate_matrix(width);
   assert(x_row_order.data != NULL);
   assert(y_row_order.data != NULL);
   assert(z_row_order.data != NULL);
   assert(x_hybrid_order.data != NULL);
   assert(y_hybrid_order.data != NULL);
   assert(z_hybrid_order.data != NULL);
-  assert(total_ints_stored() == expected_n_ints_stored && "ERROR: pre Seq mem usage");
+  assert(total_ints_stored() == expected_n_ints_stored &&
+         "ERROR: pre Seq mem usage");
   zero_storage();
 
   ic(&x_row_order, &y_row_order);
@@ -125,7 +128,7 @@ void test_mm_out(struct SquareMatrix* expected_row_order) {
 
   for (int i = 0; i < size; i++) {
     int diff = z_row_order.data[i] - expected_row_order->data[i];
-    //printf("%d\n", diff);
+    // printf("%d\n", diff);
     assert(diff == 0 && "ERROR: Out-of-place did not match expected");
   }
 
@@ -138,19 +141,20 @@ void test_mm_out(struct SquareMatrix* expected_row_order) {
   printf("Completed Test: Out-of-place\n");
 }
 
-void test_mm_hybrid(struct SquareMatrix* expected_row_order, int mem_usage_limit) {
+void test_mm_hybrid(struct SquareMatrix* expected_row_order,
+                    int mem_usage_limit) {
   printf("Running test_mm_hybrid...\n");
   int width = expected_row_order->width;
-  int size = width * width; 
+  int size = width * width;
   int expected_n_ints_stored = size * 6;
   zero_storage();
   set_int_storage_limit(expected_n_ints_stored * 2);
-  struct SquareMatrix x_row_order = allocate_matrix(width); 
-  struct SquareMatrix y_row_order = allocate_matrix(width); 
-  struct SquareMatrix z_row_order = allocate_matrix(width); 
-  struct SquareMatrix x_hybrid_order = allocate_matrix(width); 
-  struct SquareMatrix y_hybrid_order = allocate_matrix(width); 
-  struct SquareMatrix z_hybrid_order = allocate_matrix(width); 
+  struct SquareMatrix x_row_order = allocate_matrix(width);
+  struct SquareMatrix y_row_order = allocate_matrix(width);
+  struct SquareMatrix z_row_order = allocate_matrix(width);
+  struct SquareMatrix x_hybrid_order = allocate_matrix(width);
+  struct SquareMatrix y_hybrid_order = allocate_matrix(width);
+  struct SquareMatrix z_hybrid_order = allocate_matrix(width);
   assert(x_row_order.data != NULL);
   assert(y_row_order.data != NULL);
   assert(z_row_order.data != NULL);
@@ -158,10 +162,13 @@ void test_mm_hybrid(struct SquareMatrix* expected_row_order, int mem_usage_limit
   assert(y_hybrid_order.data != NULL);
   assert(z_hybrid_order.data != NULL);
   int ints_stored = total_ints_stored();
-  printf("Seq Pre Ints Stored: %d, expected: %d\n", ints_stored, expected_n_ints_stored);
-  assert( ints_stored == expected_n_ints_stored && "ERROR: pre Seq did not store expected number of ints");
+  printf("Seq Pre Ints Stored: %d, expected: %d\n", ints_stored,
+         expected_n_ints_stored);
+  assert(ints_stored == expected_n_ints_stored &&
+         "ERROR: pre Seq did not store expected number of ints");
   zero_storage();
-  printf("Completed: test_mm_hybrid setup, mem_usage_limit: %d\n", mem_usage_limit);
+  printf("Completed: test_mm_hybrid setup, mem_usage_limit: %d\n",
+         mem_usage_limit);
 
   ic(&x_row_order, &y_row_order);
   to_hybrid_order(&x_row_order, &x_hybrid_order);
@@ -170,8 +177,9 @@ void test_mm_hybrid(struct SquareMatrix* expected_row_order, int mem_usage_limit
   set_int_storage_limit(mem_usage_limit);
   mm_hybrid(&x_hybrid_order, &y_hybrid_order, &z_hybrid_order);
   to_row_order(&z_hybrid_order, &z_row_order);
-  
-  assert(total_ints_stored() <= mem_usage_limit && "ERROR: Hybrid Mem Usage Greater than limit");
+
+  assert(total_ints_stored() <= mem_usage_limit &&
+         "ERROR: Hybrid Mem Usage Greater than limit");
   printf("Hybrid Mem Usage: %d\n", total_ints_stored());
 
   for (int i = 0; i < size; i++) {

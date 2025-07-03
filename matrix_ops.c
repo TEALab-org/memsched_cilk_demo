@@ -168,7 +168,7 @@ void mm_hybrid(struct SquareMatrix* x,
   struct SquareMatrix z_12 = quadrant_12(z);
   struct SquareMatrix z_21 = quadrant_21(z);
   struct SquareMatrix z_22 = quadrant_22(z);
-  
+
   struct SquareMatrix t = allocate_matrix(x->width);
   if (t.data == NULL) {
     cilk_spawn mm_hybrid(&x_11, &y_11, &z_11);
