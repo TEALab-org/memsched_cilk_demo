@@ -102,7 +102,7 @@ void mm_out(struct SquareMatrix* x,
   struct SquareMatrix t = allocate_matrix(x->width);
   if (t.data == NULL) {
     printf("ERROR: allocation failed");
-    exit;
+    exit(1);
   }
 
   struct SquareMatrix x_11 = quadrant_11(x);

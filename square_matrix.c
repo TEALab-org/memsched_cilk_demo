@@ -6,7 +6,7 @@
 
 struct SquareMatrix allocate_matrix(int width) {
   int size = width * width;
-  int* data = t_malloc(size * sizeof(int));
+  int* data = int_malloc(size);
   struct SquareMatrix result;
   result.data = data;
   result.width = width;
