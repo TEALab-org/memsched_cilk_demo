@@ -3,6 +3,7 @@
 
 #include "matrix_ops.h"
 #include <assert.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "allocator.h"
@@ -87,6 +88,7 @@ void mm_in(struct SquareMatrix* x,
 void mm_out(struct SquareMatrix* x,
             struct SquareMatrix* y,
             struct SquareMatrix* z) {
+  // printf("mm_out: %d\n", x->width);
   assert(x->width == y->width);
   assert(x->width == z->width);
   assert(x->data != NULL);
@@ -101,7 +103,7 @@ void mm_out(struct SquareMatrix* x,
   int prob_size = x->width * x->width;
   struct SquareMatrix t = allocate_matrix(x->width);
   if (t.data == NULL) {
-    printf("ERROR: allocation failed");
+    printf("ERROR: allocation failed\n");
     exit(1);
   }
 
@@ -202,6 +204,13 @@ void mm_hybrid(struct SquareMatrix* x,
     mm_add(z, &t);
     free_matrix(&t);
   }
+}
+
+int mm_out_memory_usage(int base, int power) {
+  printf("mm_out_memory_usage, base: %d, power: %d\n", base, power);
+  int width = base * pow(2, power);
+  int size = width * width;
+  return power * size;
 }
 
 #endif

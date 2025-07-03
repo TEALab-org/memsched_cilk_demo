@@ -5,16 +5,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-atomic_int total_mem = 0;
+atomic_int A_TOTAL_INTS_STORED = 0;
 
-int MEM_USAGE_LIMIT = 0;
+int INT_STORAGE_LIMIT = 0;
 
 int* int_malloc(int n_ints) {
-  // int bytes = n_ints * sizeof(int);
-  int pre_total_ints_stored =
-      atomic_fetch_add_explicit(&total_mem, n_ints, memory_order_relaxed);
-  if (pre_total_ints_stored + n_ints > MEM_USAGE_LIMIT) {
-    atomic_fetch_add_explicit(&total_mem, -n_ints, memory_order_relaxed);
+  int pre_total_ints_stored = atomic_fetch_add_explicit(
+      &A_TOTAL_INTS_STORED, n_ints, memory_order_relaxed);
+  // printf("int_malloc, pre_fetch: %d, n_ints: %d, limit: %d\n",
+  // pre_total_ints_stored, n_ints, INT_STORAGE_LIMIT);
+  if (pre_total_ints_stored + n_ints > INT_STORAGE_LIMIT) {
+    atomic_fetch_add_explicit(&A_TOTAL_INTS_STORED, -n_ints,
+                              memory_order_relaxed);
     return NULL;
   }
   int* result = calloc(n_ints, sizeof(int));
@@ -22,21 +24,21 @@ int* int_malloc(int n_ints) {
 }
 
 void zero_storage() {
-  atomic_store(&total_mem, 0.0);
+  atomic_store(&A_TOTAL_INTS_STORED, 0.0);
 }
 
 void print_total_ints_stored() {
-  int total_used = atomic_load(&total_mem);
-  printf("Total bytes allocated: %d\n", total_used);
+  int ints_stored = atomic_load(&A_TOTAL_INTS_STORED);
+  printf("Total bytes allocated: %d\n", ints_stored);
 }
 
 int total_ints_stored() {
-  int total_used = atomic_load(&total_mem);
+  int total_used = atomic_load(&A_TOTAL_INTS_STORED);
   return total_used;
 }
 
 void set_int_storage_limit(int limit) {
-  MEM_USAGE_LIMIT = limit;
+  INT_STORAGE_LIMIT = limit;
 }
 
 #endif
