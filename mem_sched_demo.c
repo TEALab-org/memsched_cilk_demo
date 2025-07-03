@@ -118,8 +118,8 @@ int main(int argc, char* argv[]) {
     }
     long end = get_time();
     double elapsed_s = (end - start) / 1000.0;
-    int usage = total_ints_stored();
-    fprintf(fp, "%zu %f %d\n", matrix_size, elapsed_s, usage);
+    size_t usage = total_ints_stored();
+    fprintf(fp, "%zu %f %zu\n", matrix_size, elapsed_s, usage);
   }
   fclose(fp);
 

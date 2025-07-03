@@ -1,7 +1,8 @@
 OUTPUT_DIR="data/macbook_run_01"
 POW_MIN="5"
 POW_MAX="9"
-BASES=("1" "3" "5" "7" "11", "13");
+# BASES=("1" "3" "5" "7" "11" "13");
+BASES=("1" "3");
 TYPES=("0" "1");
 N_TRIALS="5"
 CILK_WORKERS=8
