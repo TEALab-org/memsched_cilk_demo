@@ -100,7 +100,6 @@ void mm_out(struct SquareMatrix* x,
     return;
   }
 
-  int prob_size = x->width * x->width;
   struct SquareMatrix t = allocate_matrix(x->width);
   if (t.data == NULL) {
     printf("ERROR: allocation failed\n");

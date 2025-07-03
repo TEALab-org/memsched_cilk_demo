@@ -141,7 +141,7 @@ void test_mm_out(struct SquareMatrix* expected_row_order, int power) {
   to_row_order(&z_hybrid_order, &z_row_order);
 
   assert(total_ints_stored() != 0 && "ERROR: Out-of-place Mem Usage is Zero");
-  printf("mm_out mem report, base: %d, power: %d, used: %d, expected: %d\n",
+  printf("mm_out mem report, base: %d, power: %d, used: %zu, expected: %d\n",
          BASE_WIDTH, power, total_ints_stored(), expected_out_storage);
 
   for (int i = 0; i < size; i++) {
@@ -197,7 +197,7 @@ void test_mm_hybrid(struct SquareMatrix* expected_row_order,
 
   assert(total_ints_stored() <= mem_usage_limit &&
          "ERROR: Hybrid Mem Usage Greater than limit");
-  printf("Hybrid Mem Usage: %d\n", total_ints_stored());
+  printf("Hybrid Mem Usage: %zu\n", total_ints_stored());
 
   for (int i = 0; i < size; i++) {
     int diff = z_row_order.data[i] - expected_row_order->data[i];
@@ -213,7 +213,7 @@ void test_mm_hybrid(struct SquareMatrix* expected_row_order,
   printf("Completed Test: Hybrid, mem_usage_limit: %d\n", mem_usage_limit);
 }
 
-int run_test_cases(int base_width, int power) {
+void run_test_cases(int base_width, int power) {
   BASE_WIDTH = base_width;
   int prob_width = BASE_WIDTH * pow(2, power);
   int prob_size = prob_width * prob_width;

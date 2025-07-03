@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/time.h>
 #include "allocator.h"
 #include "matrix_ops.c"
@@ -53,7 +54,12 @@ int main(int argc, char* argv[]) {
   char* output_path = argv[1];
   int base = atoi(argv[2]);
   int power = atoi(argv[3]);
-  int storage_limit = atoi(argv[4]);
+  size_t storage_limit = 0;
+  if (strcmp(argv[4], "max")) {
+    storage_limit = (size_t)SIZE_MAX;
+  } else {
+    storage_limit = atoi(argv[4]);
+  }
   int n_trials = atoi(argv[5]);
   int type = atoi(argv[6]);
 
