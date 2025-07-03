@@ -1,3 +1,14 @@
+// test_mm.c
+//
+// Just build and run this without arguments.
+// In lieu of a testing framework
+// We test that
+//   * mm_in, 
+//   * mm_out, 
+//   * mm_hybrid 
+// match the output of mm_seq, 
+// with one x, y pair :(
+
 #include <assert.h>
 #include "allocator.h"
 #include "matrix_ops.c"
@@ -29,6 +40,7 @@ struct SquareMatrix generate_expected(int width) {
   printf("Running generate_expected...\n");
   int size = width * width;
   int expected_n_ints_stored = size * 3;
+  zero_storage();
   set_int_storage_limit(expected_n_ints_stored * 2);
   struct SquareMatrix x_row_order = allocate_matrix(width);
   struct SquareMatrix y_row_order = allocate_matrix(width);
@@ -54,6 +66,7 @@ void test_mm_in(struct SquareMatrix* expected_row_order) {
   int width = expected_row_order->width;
   int size = width * width;
   int expected_n_ints_stored = size * 6;
+  zero_storage();
   set_int_storage_limit(expected_n_ints_stored * 2);
   struct SquareMatrix x_row_order = allocate_matrix(width);
   struct SquareMatrix y_row_order = allocate_matrix(width);
@@ -98,6 +111,7 @@ void test_mm_out(struct SquareMatrix* expected_row_order) {
   int width = expected_row_order->width;
   int size = width * width;
   int expected_n_ints_stored = size * 6;
+  zero_storage();
   set_int_storage_limit(expected_n_ints_stored * 2);
   struct SquareMatrix x_row_order = allocate_matrix(width);
   struct SquareMatrix y_row_order = allocate_matrix(width);
@@ -128,7 +142,6 @@ void test_mm_out(struct SquareMatrix* expected_row_order) {
 
   for (int i = 0; i < size; i++) {
     int diff = z_row_order.data[i] - expected_row_order->data[i];
-    // printf("%d\n", diff);
     assert(diff == 0 && "ERROR: Out-of-place did not match expected");
   }
 
@@ -204,8 +217,8 @@ int main(void) {
   test_mm_in(&expected_row_order);
   test_mm_out(&expected_row_order);
   test_mm_hybrid(&expected_row_order, 0);
-  test_mm_hybrid(&expected_row_order, 2000);
-  test_mm_hybrid(&expected_row_order, 4000);
+  test_mm_hybrid(&expected_row_order, 512);
+  test_mm_hybrid(&expected_row_order, 800);
 
   free_matrix(&expected_row_order);
   printf("Complete\n");
