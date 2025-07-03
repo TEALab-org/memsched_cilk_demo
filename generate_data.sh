@@ -1,8 +1,8 @@
-OUTPUT_DIR="data/macbook_run_02"
-POW_MIN="5"
-POW_MAX="10"
+OUTPUT_DIR="data/macbook_run_03"
+POW_MIN="3"
+POW_MAX="7"
 # BASES=("1" "3" "5" "7" "11" "13");
-BASES=("4")
+BASES=("64")
 TYPES=("0" "1")
 FACTORS=("0.5" "0.2")
 N_TRIALS="5"
@@ -12,7 +12,7 @@ CILK_WORKERS=8
 	-fopencilk \
 	-std=c11 \
 	-I /Users/russell/installed_software/opencilk-2.1.0-arm64-apple-darwin21.6.0/lib/clang/16/include/cilk \
-	-03 \
+	-O3 \
 	-Wall \
 	mem_sched_demo.c \
 	-o mem_sched_demo
