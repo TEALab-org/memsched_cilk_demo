@@ -14,7 +14,8 @@ struct SquareMatrix allocate_matrix(int width) {
 }
 
 void free_matrix(struct SquareMatrix* m) {
-  free(m->data);
+  size_t width = (size_t)m->width;
+  int_free(m->data, width * width);
 }
 
 struct SquareMatrix quadrant_11(struct SquareMatrix* m) {

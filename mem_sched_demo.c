@@ -64,17 +64,17 @@ int main(int argc, char* argv[]) {
     size_t max_usage = mm_out_memory_usage(base, power);
     char* end = NULL;
     double factor = strtod(argv[4], &end);
-    storage_limit = (size_t) (factor * (double) max_usage);
+    storage_limit = (size_t)(factor * (double)max_usage);
   } else {
     printf("parse limit (%s)\n", argv[4]);
     storage_limit = atoi(argv[4]);
   }
   int n_trials = atoi(argv[5]);
   int type = atoi(argv[6]);
-  
+
   BASE_WIDTH = base;
   int matrix_width = BASE_WIDTH * pow(2, power);
-  size_t matrix_size = (size_t) matrix_width * (size_t) matrix_width;
+  size_t matrix_size = (size_t)matrix_width * (size_t)matrix_width;
   size_t problem_base_storage = 3 * matrix_size;
 
   printf("output_path: %s\n", output_path);

@@ -23,6 +23,11 @@ int* int_malloc(size_t n_ints) {
   return result;
 }
 
+void int_free(int* data, size_t n_ints) {
+  atomic_fetch_sub_explicit(&A_TOTAL_INTS_STORED, n_ints, memory_order_relaxed);
+  free(data);
+}
+
 void zero_storage() {
   atomic_store(&A_TOTAL_INTS_STORED, 0.0);
 }

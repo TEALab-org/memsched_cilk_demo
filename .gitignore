@@ -1,6 +1,7 @@
 *.txt
 *.out
 *.dSYM
+*.ipynb_checkpoints
 
 mem_sched_demo
 test_mm
