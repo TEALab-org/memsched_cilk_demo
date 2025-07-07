@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
 
   FILE* fp = fopen(output_path, "w");
   if (fp == NULL) {
-    printf("ERROR: Failed to open file");
+    printf("ERROR: Failed to open file\n");
     exit(1);
   }
   for (int trial = 0; trial < n_trials; trial++) {
