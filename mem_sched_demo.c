@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
   printf("storage_limit: %zu\n", storage_limit);
   printf("type: %s\n", mm_type(type));
   zero_storage();
-  set_int_storage_limit(storage_limit);
+  set_int_storage_limit(problem_base_storage + storage_limit);
   struct SquareMatrix x = allocate_matrix(matrix_width);
   struct SquareMatrix y = allocate_matrix(matrix_width);
   struct SquareMatrix z = allocate_matrix(matrix_width);
