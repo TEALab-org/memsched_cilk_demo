@@ -10,7 +10,7 @@ atomic_size_t A_TOTAL_INTS_STORED = 0;
 size_t INT_STORAGE_LIMIT = 0;
 
 int* int_malloc(size_t n_ints) {
-  int pre_total_ints_stored = atomic_fetch_add_explicit(
+  size_t pre_total_ints_stored = atomic_fetch_add_explicit(
       &A_TOTAL_INTS_STORED, n_ints, memory_order_relaxed);
   // printf("int_malloc, pre_fetch: %d, n_ints: %d, limit: %d\n",
   // pre_total_ints_stored, n_ints, INT_STORAGE_LIMIT);
