@@ -12,14 +12,16 @@ size_t INT_STORAGE_LIMIT = 0;
 int* int_malloc(size_t n_ints) {
   size_t pre_total_ints_stored = atomic_fetch_add_explicit(
       &A_TOTAL_INTS_STORED, n_ints, memory_order_relaxed);
-  // printf("int_malloc, pre_fetch: %d, n_ints: %d, limit: %d\n",
-  // pre_total_ints_stored, n_ints, INT_STORAGE_LIMIT);
   if (pre_total_ints_stored + n_ints > INT_STORAGE_LIMIT) {
     atomic_fetch_sub_explicit(&A_TOTAL_INTS_STORED, n_ints,
                               memory_order_relaxed);
     return NULL;
   }
   int* result = calloc(n_ints, sizeof(int));
+  if (result == NULL) {
+    printf("ERROR: calloc failed\n");
+    exit(1);
+  }
   return result;
 }
 
@@ -32,7 +34,7 @@ void zero_storage() {
   atomic_store(&A_TOTAL_INTS_STORED, 0.0);
 }
 
-void set_int_storage(int ints_stored) {
+void set_int_storage(size_t ints_stored) {
   atomic_store(&A_TOTAL_INTS_STORED, ints_stored);
 }
 

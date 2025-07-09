@@ -56,9 +56,18 @@ int main(int argc, char* argv[]) {
   int base = atoi(argv[2]);
   int power = atoi(argv[3]);
   size_t storage_limit = 0;
+
+  int n_trials = atoi(argv[5]);
+  int type = atoi(argv[6]);
+
+  BASE_WIDTH = base;
+  size_t matrix_width = BASE_WIDTH * pow(2, power);
+  size_t matrix_size = (size_t)matrix_width * (size_t)matrix_width;
+  size_t problem_base_storage = 3 * matrix_size;
+
   if (strcmp(argv[4], "max") == 0) {
-    printf("use max\n");
     storage_limit = (size_t)SIZE_MAX;
+    printf("use max\n");
   } else if (argv[4][0] == '0') {
     printf("use float, %s\n", argv[4]);
     size_t max_usage = mm_out_memory_usage(base, power);
@@ -67,28 +76,23 @@ int main(int argc, char* argv[]) {
     storage_limit = (size_t)(factor * (double)max_usage);
   } else {
     printf("parse limit (%s)\n", argv[4]);
-    storage_limit = atoi(argv[4]);
+    storage_limit = atoi(argv[4]) + problem_base_storage;
   }
-  int n_trials = atoi(argv[5]);
-  int type = atoi(argv[6]);
-
-  BASE_WIDTH = base;
-  int matrix_width = BASE_WIDTH * pow(2, power);
-  size_t matrix_size = (size_t)matrix_width * (size_t)matrix_width;
-  size_t problem_base_storage = 3 * matrix_size;
 
   printf("output_path: %s\n", output_path);
   printf("base: %d\n", base);
   printf("power: %d\n", power);
-  printf("width: %d\n", matrix_width);
+  printf("width: %zu\n", matrix_width);
   printf("size: %zu\n", matrix_size);
   printf("storage_limit: %zu\n", storage_limit);
   printf("type: %s\n", mm_type(type));
   zero_storage();
-  set_int_storage_limit(problem_base_storage + storage_limit);
+  set_int_storage_limit(storage_limit);
+  printf("INT_STORAGE_LIMIT: %zu\n", INT_STORAGE_LIMIT);
   struct SquareMatrix x = allocate_matrix(matrix_width);
   struct SquareMatrix y = allocate_matrix(matrix_width);
   struct SquareMatrix z = allocate_matrix(matrix_width);
+  printf("tis: %zu, pbs: %zu\n", total_ints_stored(), problem_base_storage);
   assert(total_ints_stored() == problem_base_storage);
 
   // Set ICs
@@ -107,6 +111,7 @@ int main(int argc, char* argv[]) {
   }
   for (int trial = 0; trial < n_trials; trial++) {
     printf("Running trial: %d...\n", trial);
+    assert(total_ints_stored() == problem_base_storage);
     set_int_storage(problem_base_storage);
     long start = get_time();
     switch (type) {
@@ -125,7 +130,7 @@ int main(int argc, char* argv[]) {
     long end = get_time();
     double elapsed_s = (end - start) / 1000.0;
     size_t usage = total_ints_stored();
-    fprintf(fp, "%d %f %zu\n", matrix_width, elapsed_s, usage);
+    fprintf(fp, "%zu %f %zu\n", matrix_width, elapsed_s, usage);
     printf("Usage: %zu\n", usage);
   }
   fclose(fp);

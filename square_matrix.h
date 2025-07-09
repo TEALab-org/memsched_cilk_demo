@@ -9,7 +9,7 @@ struct SquareMatrix {
 };
 
 // Allocate memory for a new matrix
-struct SquareMatrix allocate_matrix(int width);
+struct SquareMatrix allocate_matrix(size_t width);
 
 // Free memory allocated by a matrix
 // WARNING: only use on matrices created by allocate_matrix

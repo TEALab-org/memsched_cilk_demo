@@ -4,8 +4,8 @@
 #include "square_matrix.h"
 #include "allocator.h"
 
-struct SquareMatrix allocate_matrix(int width) {
-  int size = width * width;
+struct SquareMatrix allocate_matrix(size_t width) {
+  size_t size = width * width;
   int* data = int_malloc(size);
   struct SquareMatrix result;
   result.data = data;
