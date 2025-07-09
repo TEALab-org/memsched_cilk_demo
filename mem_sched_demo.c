@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
     size_t max_usage = mm_out_memory_usage(base, power);
     char* end = NULL;
     double factor = strtod(argv[4], &end);
-    storage_limit = (size_t)(factor * (double)max_usage);
+    storage_limit = (size_t)(factor * (double)max_usage) + problem_base_storage;
   } else {
     printf("parse limit (%s)\n", argv[4]);
     storage_limit = atoi(argv[4]) + problem_base_storage;
